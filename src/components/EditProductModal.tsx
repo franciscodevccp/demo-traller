@@ -3,6 +3,7 @@
 import { useProducts } from "@/store/ProductsContext";
 import { ProductForm } from "@/components/ProductForm";
 import { useVisualViewportHeight } from "@/hooks/useVisualViewportHeight";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Dialog,
   DialogContent,
@@ -16,21 +17,25 @@ type Props = {
   onOpenChange: (open: boolean) => void;
 };
 
-const GAP = 16;
+const GAP = 24;
 
 export function EditProductModal({ productId, open, onOpenChange }: Props) {
   const { getProductById, updateProduct } = useProducts();
   const product = productId ? getProductById(productId) : null;
-  const { height: viewportHeight, positionAtTop } = useVisualViewportHeight(open);
+  const isMobile = useIsMobile();
+  const { height: viewportHeight, offsetTop } = useVisualViewportHeight(open);
 
   const contentStyle = open
-    ? {
-        maxHeight: `min(${viewportHeight - GAP}px, 90vh)`,
-        ...(positionAtTop && {
-          top: "0.5rem",
+    ? isMobile
+      ? {
+          top: `${offsetTop + 8}px`,
           transform: "translateX(-50%)",
-        }),
-      }
+          maxHeight: `min(${viewportHeight - GAP}px, 52vh)`,
+          height: `min(${viewportHeight - GAP}px, 52vh)`,
+        }
+      : {
+          maxHeight: `min(${viewportHeight - GAP}px, 90vh)`,
+        }
     : undefined;
 
   if (!product && open) return null;

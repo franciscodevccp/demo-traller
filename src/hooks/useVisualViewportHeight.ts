@@ -3,20 +3,24 @@
 import { useState, useEffect } from "react";
 
 /**
- * Devuelve la altura del visual viewport (se reduce cuando el teclado virtual está abierto en móvil).
- * Permite que los modales limiten su altura y el scroll funcione correctamente con el teclado abierto.
+ * Devuelve datos del visual viewport para que los modales se adapten al teclado virtual en móvil.
  */
 export function useVisualViewportHeight(enabled: boolean) {
-  const [height, setHeight] = useState(600);
-  const [innerHeight, setInnerHeight] = useState(600);
+  const [height, setHeight] = useState(400);
+  const [offsetTop, setOffsetTop] = useState(0);
 
   useEffect(() => {
     if (!enabled || typeof window === "undefined") return;
 
     const vv = window.visualViewport;
     const update = () => {
-      setInnerHeight(window.innerHeight);
-      setHeight(vv?.height ?? window.innerHeight);
+      if (vv) {
+        setHeight(vv.height);
+        setOffsetTop(vv.offsetTop);
+      } else {
+        setHeight(window.innerHeight);
+        setOffsetTop(0);
+      }
     };
 
     update();
@@ -35,6 +39,5 @@ export function useVisualViewportHeight(enabled: boolean) {
     };
   }, [enabled]);
 
-  const positionAtTop = height > 0 && height < innerHeight * 0.85;
-  return { height, positionAtTop };
+  return { height, offsetTop };
 }
