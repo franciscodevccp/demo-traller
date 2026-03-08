@@ -128,3 +128,9 @@
     @apply bg-background text-foreground overflow-x-hidden min-h-svh;
   }
 }
+
+/* Scroll suave en modales con teclado abierto (móvil) */
+.modal-form-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
