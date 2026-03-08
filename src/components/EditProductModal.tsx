@@ -2,8 +2,6 @@
 
 import { useProducts } from "@/store/ProductsContext";
 import { ProductForm } from "@/components/ProductForm";
-import { useVisualViewportHeight } from "@/hooks/useVisualViewportHeight";
-import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Dialog,
   DialogContent,
@@ -17,34 +15,16 @@ type Props = {
   onOpenChange: (open: boolean) => void;
 };
 
-const GAP = 24;
-
 export function EditProductModal({ productId, open, onOpenChange }: Props) {
   const { getProductById, updateProduct } = useProducts();
   const product = productId ? getProductById(productId) : null;
-  const isMobile = useIsMobile();
-  const { height: viewportHeight, offsetTop } = useVisualViewportHeight(open);
-
-  const contentStyle = open
-    ? isMobile
-      ? {
-          top: `${offsetTop + 8}px`,
-          transform: "translateX(-50%)",
-          maxHeight: `min(${viewportHeight - GAP}px, 52vh)`,
-          height: `min(${viewportHeight - GAP}px, 52vh)`,
-        }
-      : {
-          maxHeight: `min(${viewportHeight - GAP}px, 90vh)`,
-        }
-    : undefined;
 
   if (!product && open) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="flex w-[calc(100%-2rem)] flex-col overflow-hidden p-0 sm:max-w-lg lg:max-w-2xl"
-        style={contentStyle}
+        className="flex max-h-[90vh] w-[calc(100%-2rem)] flex-col overflow-hidden p-0 sm:max-w-lg lg:max-w-2xl max-md:top-4 max-md:max-h-[50vh] max-md:translate-y-0"
         showCloseButton={true}
       >
         <DialogHeader className="shrink-0 border-b px-6 py-5">
